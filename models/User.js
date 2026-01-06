@@ -32,8 +32,8 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "manager", "driver"],
-      default: "driver",
+      enum: ["admin", "manager", "sales"], //user model names changed
+      default: "sales",
     },
   },
   {
