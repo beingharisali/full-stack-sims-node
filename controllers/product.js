@@ -1,4 +1,29 @@
 const productModel = require("../models/Product");
+const createProduct = async (req, res) => {
+  try {
+    const setProduct = new productModel({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      supplier: req.body.supplier,
+      stock: req.body.stock || 0,
+    });
+    await setProduct.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      data: setProduct,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to create product",
+      data: error.messsage,
+    });
+  }
+};
 
 const getProduct = async (req, res) => {
   try {
@@ -12,11 +37,12 @@ const getProduct = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Unable to fetch products. Error occured",
-      data: message.error,
+      data: error.message,
     });
   }
 };
 
-module.export = {
+module.exports = {
+  createProduct,
   getProduct,
 };
