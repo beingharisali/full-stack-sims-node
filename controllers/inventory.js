@@ -1,6 +1,5 @@
 const inventoryModel = require("../models/inventory");
 
-// SIMS-NODE-13
 const getInventory = async (req, res) => {
     try {
         const inventory = await inventoryModel.find({});
@@ -18,7 +17,6 @@ const getInventory = async (req, res) => {
     }
 };
 
-// SIMS-NODE-14
 const createInventory = async (req, res) => {
     try {
         const setInventory = new inventoryModel({
@@ -46,7 +44,6 @@ const createInventory = async (req, res) => {
     }
 };
 
-// SIMS-NODE-15
 const updateInventory = async (req, res) => {
     try {
         const updatedInventory = await inventoryModel.findByIdAndUpdate(
@@ -76,7 +73,6 @@ const updateInventory = async (req, res) => {
     }
 };
 
-// SIMS-NODE-16
 const deleteInventory = async (req, res) => {
     try {
         const deletedInventory = await inventoryModel.findByIdAndDelete(
@@ -104,9 +100,35 @@ const deleteInventory = async (req, res) => {
     }
 };
 
+const getSingleInventory = async (req, res) => {
+    try {
+        const inventory = await inventoryModel.findById(req.params.id);
+
+        if (!inventory) {
+            return res.status(404).json({
+                success: false,
+                message: "Inventory not found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Single inventory fetched successfully",
+            data: inventory,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Unable to fetch inventory",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     getInventory,
     createInventory,
     updateInventory,
     deleteInventory,
+    getSingleInventory,
 };
