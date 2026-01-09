@@ -46,8 +46,8 @@ const createInventory = async (req, res) => {
 
 const updateInventory = async (req, res) => {
     try {
-        const updatedInventory = await inventoryModel.findByIdAndUpdate(
-            req.params.id,
+        const { id } = req.params
+        const updatedInventory = await inventoryModel.findByIdAndUpdate(id,
             req.body,
             { new: true }
         );
@@ -75,8 +75,9 @@ const updateInventory = async (req, res) => {
 
 const deleteInventory = async (req, res) => {
     try {
+        const { id } = req.params
         const deletedInventory = await inventoryModel.findByIdAndDelete(
-            req.params.id
+            id
         );
 
         if (!deletedInventory) {
@@ -102,7 +103,8 @@ const deleteInventory = async (req, res) => {
 
 const getSingleInventory = async (req, res) => {
     try {
-        const inventory = await inventoryModel.findById(req.params.id);
+        const { id } = req.params
+        const inventory = await inventoryModel.findById(id);
 
         if (!inventory) {
             return res.status(404).json({
