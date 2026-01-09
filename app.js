@@ -2,10 +2,13 @@ require("dotenv").config({ path: "./.env" });
 
 const express = require("express");
 const cors = require("cors");
+<<<<<<< HEAD
 const app = express();
 const productRouter = require("./routes/products");
 
 // extra security packages
+=======
+>>>>>>> bc36db28d424124dc822fad65393c20624f0f4ef
 const helmet = require("helmet");
 const rateLimiter = require("express-rate-limit");
 
@@ -19,8 +22,18 @@ app.use(
   })
 );
 app.use(helmet());
+<<<<<<< HEAD
 app.use(express.json());
 // routes
+=======
+
+const inventoryRoutes = require("./routes/inventory");
+const authRouter = require("./routes/auth");
+
+app.use(express.json());
+
+app.use("/api/v1/", inventoryRoutes);
+>>>>>>> bc36db28d424124dc822fad65393c20624f0f4ef
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/", productRouter);
 
