@@ -2,6 +2,10 @@ require("dotenv").config({ path: "./.env" });
 
 const express = require("express");
 const cors = require("cors");
+const app = express();
+const productRouter = require("./routes/products");
+
+// extra security packages
 const helmet = require("helmet");
 const rateLimiter = require("express-rate-limit");
 
@@ -15,14 +19,10 @@ app.use(
   })
 );
 app.use(helmet());
-
-const inventoryRoutes = require("./routes/inventory");
-const authRouter = require("./routes/auth");
-
 app.use(express.json());
-
-app.use("/api/v1/", inventoryRoutes);
+// routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/", productRouter);
 
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
