@@ -3,6 +3,7 @@ require("dotenv").config({ path: "./.env" });
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const productRouter = require("./routes/products");
 
 // extra security packages
 const helmet = require("helmet");
@@ -28,9 +29,10 @@ app.use(
   })
 );
 app.use(helmet());
-
+app.use(express.json());
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/", productRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

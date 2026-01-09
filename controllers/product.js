@@ -41,13 +41,13 @@ const getProduct = async (req, res) => {
     });
   }
 };
+
 const updateProduct = async (req, res) => {
   try {
-    const updatedProduct = await productModel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const { id } = req.params;
+    const updatedProduct = await productModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
 
     if (!updatedProduct) {
       return res.status(404).json({
@@ -72,7 +72,8 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await productModel.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+    const deletedProduct = await productModel.findByIdAndDelete(id);
 
     if (!deletedProduct) {
       return res.status(404).json({
@@ -97,7 +98,8 @@ const deleteProduct = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
   try {
-    const product = await productModel.findById(req.params.id);
+    const { id } = req.params;
+    const product = await productModel.findById(id);
     if (!product) {
       return res.status(404).json({
         success: false,
