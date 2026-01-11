@@ -2,39 +2,42 @@ require("dotenv").config({ path: "./.env" });
 
 const express = require("express");
 const cors = require("cors");
-const app = express();
-const productRouter = require("./routes/products");
-
-// extra security packages
 const helmet = require("helmet");
 const rateLimiter = require("express-rate-limit");
 
-app.use(cors());
-app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
-  })
-);
-app.use(helmet());
-app.use(express.json());
-// routes
+const app = express();
 
+// routers
+const productRouter = require("./routes/products");
 const inventoryRoutes = require("./routes/inventory");
 const authRouter = require("./routes/auth");
 
+// middleware
+app.use(cors());
 app.use(express.json());
 
-app.use("/api/v1/", inventoryRoutes);
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/", productRouter);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+  })
+);
 
+app.use(helmet());
+
+// routes
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/products", productRouter);
+app.use("/api/v1/inventory", inventoryRoutes);
+
+// error handlers
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
+// db
 const connectDB = require("./db/connect");
 
 const port = process.env.PORT || 5000;
