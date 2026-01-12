@@ -9,15 +9,16 @@ const {
     getSingleInventory,
 } = require("../controllers/inventory");
 
-router.post("/inventory", createInventory);
-router.get("/inventory", getInventory);
+router.post("/create", createInventory);
 
-router.get("/inventory/:id", getSingleInventory);
+router.get("/get", getInventory);
+
+router.get("/get/:id", getSingleInventory);
 
 
 
-router.put("/inventory/:id", updateInventory);
+router.put("/update/:id", updateInventory);
 
-router.delete("/inventory/:id", deleteInventory);
+router.delete("/delete/:id", deleteInventory);
 
 module.exports = router;
