@@ -17,7 +17,7 @@ const supplierSchema = new mongoose.Schema({
     trim: true,
   },
   contactNumber: {
-    type: Number,
+    type: String,
     required: [true, "Contact number is required"],
     minlength: 11,
     maxlength: 15,
@@ -31,7 +31,7 @@ const supplierSchema = new mongoose.Schema({
       "laptop",
       "headphones",
       "tablet",
-      "television",
+      "televison",
       "camera",
       "headphones",
       "smartwatch",

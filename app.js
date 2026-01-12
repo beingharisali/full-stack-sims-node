@@ -9,6 +9,7 @@ const app = express();
 
 // routers
 const productRouter = require("./routes/products");
+const supplierRouter = require("./routes/supplier");
 const inventoryRoutes = require("./routes/inventory");
 const authRouter = require("./routes/auth");
 
@@ -27,6 +28,7 @@ app.use(helmet());
 
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/inventory", inventoryRoutes);
 
