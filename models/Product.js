@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema(
       maxlength: 100,
       minlength: [2, "Product name must be at least 2 characters"],
       trim: true,
+      index: true,
     },
     description: {
       type: String,
@@ -18,6 +19,20 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
+      trim: true,
+      enum: [
+        "mobile",
+        "laptop",
+        "headphones",
+        "tablet",
+        "television",
+        "camera",
+        "headphones",
+        "smartwatch",
+        "accessories",
+        "home-appliances",
+      ],
+      required: [true, "Please provide a category"],
       trim: true,
     },
     price: {
@@ -35,8 +50,7 @@ const productSchema = new mongoose.Schema(
     stock: {
       type: Number,
       default: 0,
-      required: [true, "Stock quantity is required"],
-      min: [0, "Stock quantity cannot be in negative numbers"],
+      min: [0, "Stock quantity cannot be negative"],
     },
   },
   {
