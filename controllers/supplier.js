@@ -39,8 +39,33 @@ const getSupplier = async (req, res) => {
     });
   }
 };
+const getSingleSupplier = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await supplierModel.findById(id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Supplier not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Supplier fetched successfully",
+      data: product,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch supplier",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createSupplier,
   getSupplier,
+  getSingleSupplier,
 };
