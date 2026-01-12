@@ -23,7 +23,24 @@ const createSupplier = async (req, res) => {
     });
   }
 };
+const getSupplier = async (req, res) => {
+  try {
+    const products = await supplierModel.find({});
+    res.status(200).json({
+      success: true,
+      message: "Suppliers fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch Supplier. Error occured",
+      data: error.message,
+    });
+  }
+};
 
 module.exports = {
   createSupplier,
+  getSupplier,
 };
