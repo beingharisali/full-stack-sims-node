@@ -94,10 +94,36 @@ const updateSupplier = async (req, res) => {
     });
   }
 };
+const deleteSupplier = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedSupplier = await supplierModel.findByIdAndDelete(id);
+
+    if (!deletedSupplier) {
+      return res.status(404).json({
+        success: false,
+        message: "Supplier not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Supplier has been deleted successfully",
+      data: deletedSupplier,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to delete supplier",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createSupplier,
   getSupplier,
   getSingleSupplier,
   updateSupplier,
+  deleteSupplier,
 };
