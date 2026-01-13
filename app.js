@@ -11,6 +11,7 @@ const app = express();
 const productRouter = require("./routes/products");
 const supplierRouter = require("./routes/supplier");
 const inventoryRoutes = require("./routes/inventory");
+const customerRoutes = require("./routes/customer");
 const authRouter = require("./routes/auth");
 
 // middleware
@@ -30,6 +31,7 @@ app.use(helmet());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
 
 // error handlers
