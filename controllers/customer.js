@@ -65,8 +65,42 @@ const getSingleCustomer = async (req, res) => {
     });
   }
 };
+
+const updateCustomer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedCustomer = await customerModel.findByIdAndUpdate(
+      id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedCustomer) {
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Customer has been updated successfully",
+      data: updatedCustomer,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to update customer",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createCustomer,
   getCustomer,
   getSingleCustomer,
+  updateCustomer,
 };
