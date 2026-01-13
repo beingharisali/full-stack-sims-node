@@ -97,10 +97,36 @@ const updateCustomer = async (req, res) => {
     });
   }
 };
+const deleteCustomer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedCustomer = await customerModel.findByIdAndDelete(id);
+
+    if (!deletedCustomer) {
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Customer has been deleted successfully",
+      data: deletedCustomer,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to delete customer",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createCustomer,
   getCustomer,
   getSingleCustomer,
   updateCustomer,
+  deleteCustomer,
 };
