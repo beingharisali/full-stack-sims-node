@@ -4,7 +4,7 @@ const supplierSchema = new mongoose.Schema({
   supplierGroup: {
     type: String,
     required: [true, "Please provide supplier name"],
-    maxlength: 100,
+    maxlength: 50,
     minlength: [2, "Product name must be at least 2 characters"],
     trim: true,
     index: true,
@@ -12,7 +12,7 @@ const supplierSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please provide name"],
-    maxlength: 150,
+    maxlength: 50,
     minlength: 3,
     trim: true,
   },
@@ -38,12 +38,11 @@ const supplierSchema = new mongoose.Schema({
       "accessories",
       "home-appliances",
     ],
-    trim: true,
   },
   status: {
     type: String,
     required: [true, "Please provide description"],
-    maxlength: 150,
+    maxlength: 10,
     minlength: 3,
     trim: true,
   },
