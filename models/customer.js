@@ -30,9 +30,9 @@ const customerSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ["wholesale", "individual"],
+    trim: true,
+    required: [true, "Please provide a category"],
   },
-  trim: true,
-  required: [true, "Please provide a category"],
 });
 
 module.exports = mongoose.model("Customer", customerSchema);
