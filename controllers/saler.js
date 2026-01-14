@@ -85,9 +85,49 @@ const getSingleSaler = async (req, res) => {
     });
   }
 };
+const updateSaler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedSaler = await salerModel.findByIdAndUpdate(
+      id,
+      {
+        salerGroup: req.body.supplierGroup,
+        name: req.body.name,
+        contactNumber: req.body.contactNumber,
+        category: req.body.category,
+        status: req.body.status,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedSaler) {
+      return res.status(404).json({
+        success: false,
+        message: "Saler not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Saler updated successfully",
+      data: updatedSaler,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to update saler",
+      data: error.message,
+    });
+  }
+};
 
 module.exports = {
   createsaler,
   getSaler,
   getSingleSaler,
+  updateSaler,
 };
