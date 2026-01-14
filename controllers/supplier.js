@@ -25,11 +25,11 @@ const createSupplier = async (req, res) => {
 };
 const getSupplier = async (req, res) => {
   try {
-    const products = await supplierModel.find({});
+    const supplier = await supplierModel.find({});
     res.status(200).json({
       success: true,
       message: "Suppliers fetched successfully",
-      data: products,
+      data: supplier,
     });
   } catch (error) {
     res.status(500).json({
@@ -42,7 +42,7 @@ const getSupplier = async (req, res) => {
 const getSingleSupplier = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await supplierModel.findById(id);
+    const supplier = await supplierModel.findById(id);
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -53,7 +53,7 @@ const getSingleSupplier = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Supplier fetched successfully",
-      data: product,
+      data: supplier,
     });
   } catch (error) {
     res.status(500).json({
