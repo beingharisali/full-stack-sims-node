@@ -24,7 +24,6 @@ const createProduct = async (req, res) => {
     });
   }
 };
-console.log("Products has been created");
 
 const getProduct = async (req, res) => {
   try {
@@ -42,8 +41,6 @@ const getProduct = async (req, res) => {
     });
   }
 };
-console.log("Products has been fetched");
-
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
