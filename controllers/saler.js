@@ -1,13 +1,15 @@
 const salerModel = require("../models/saler");
+
 const createsaler = async (req, res) => {
   try {
-    const createsaler = new supplierModel({
+    const createsaler = new salerModel({
       salerGroup: req.body.supplierGroup,
       name: req.body.name,
       contactNumber: req.body.contactNumber,
       category: req.body.category,
       status: req.body.status,
     });
+
     await createsaler.save();
 
     res.status(201).json({
@@ -23,6 +25,7 @@ const createsaler = async (req, res) => {
     });
   }
 };
+
 const getSaler = async (req, res) => {
   try {
     const { status } = req.query;
@@ -56,7 +59,35 @@ const getSaler = async (req, res) => {
   }
 };
 
+const getSingleSaler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const saler = await salerModel.findById(id);
+
+    if (!saler) {
+      return res.status(404).json({
+        success: false,
+        message: "Saler not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Single saler fetched successfully",
+      data: saler,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch saler",
+      data: error.message,
+    });
+  }
+};
+
 module.exports = {
   createsaler,
-  getsaler,
+  getSaler,
+  getSingleSaler,
 };
