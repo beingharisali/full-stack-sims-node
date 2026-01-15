@@ -32,7 +32,7 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
 app.use("api/v1/saler", salerRoutes);
-
+app.use("api/v1/invoice", invoiceRoutes);
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
