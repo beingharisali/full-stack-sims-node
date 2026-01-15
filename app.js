@@ -31,7 +31,8 @@ app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
-
+app.use("api/v1/saler", salerRoutes);
+app.use("api/v1/invoice", invoiceRoutes);
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
@@ -41,6 +42,7 @@ app.use(errorHandlerMiddleware);
 
 // db
 const connectDB = require("./db/connect");
+const invoice = require("./models/invoice");
 
 const port = process.env.PORT || 5000;
 
