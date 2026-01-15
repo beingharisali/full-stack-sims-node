@@ -1,27 +1,36 @@
 const salerModel = require("../models/saler");
 
-const createsaler = async (req, res) => {
+const createSaler = async (req, res) => {
   try {
-    const createsaler = new salerModel({
-      salerGroup: req.body.supplierGroup,
-      name: req.body.name,
-      contactNumber: req.body.contactNumber,
-      category: req.body.category,
-      status: req.body.status,
+    const { supplierGroup, name, contactNumber, category, status } = req.body;
+
+    if (!name || !contactNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Name and contact number are required",
+      });
+    }
+
+    const saler = new salerModel({
+      salerGroup: supplierGroup,
+      name,
+      contactNumber,
+      category,
+      status,
     });
 
-    await createsaler.save();
+    await saler.save();
 
     res.status(201).json({
       success: true,
       message: "Saler has been created successfully",
-      data: createsaler,
+      data: saler,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Unable to create saler",
-      data: error.message,
+      error: error.message,
     });
   }
 };
@@ -37,24 +46,17 @@ const getSaler = async (req, res) => {
 
     const salers = await salerModel.find(filter).sort({ createdAt: -1 });
 
-    if (salers.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No saler found",
-        data: [],
-      });
-    }
-
     res.status(200).json({
       success: true,
-      message: "Saler fetched successfully",
+      message: "Salers fetched successfully",
+      count: salers.length,
       data: salers,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Unable to fetch saler",
-      data: error.message,
+      message: "Unable to fetch salers",
+      error: error.message,
     });
   }
 };
@@ -81,10 +83,11 @@ const getSingleSaler = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Unable to fetch saler",
-      data: error.message,
+      error: error.message,
     });
   }
 };
+
 const updateSaler = async (req, res) => {
   try {
     const { id } = req.params;
@@ -120,10 +123,11 @@ const updateSaler = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Unable to update saler",
-      data: error.message,
+      error: error.message,
     });
   }
 };
+
 const deleteSaler = async (req, res) => {
   try {
     const { id } = req.params;
@@ -146,13 +150,13 @@ const deleteSaler = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Unable to delete saler",
-      data: error.message,
+      error: error.message,
     });
   }
 };
 
 module.exports = {
-  createsaler,
+  createSaler,
   getSaler,
   getSingleSaler,
   updateSaler,
