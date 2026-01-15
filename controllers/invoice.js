@@ -34,7 +34,32 @@ exports.getAllInvoices = async (req, res) => {
     });
   }
 };
+
+exports.getSingleInvoice = async (req, res) => {
+  try {
+    const invoice = await Invoice.findById(req.params.id);
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: "Invoice not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: invoice,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
 module.exports = {
   createInvoice,
   getAllInvoices,
+  getSingleInvoice,
 };
