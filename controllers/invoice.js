@@ -1,4 +1,4 @@
-const invoice = require("../model/invoive");
+const Invoice = require("../model/invoice");
 
 exports.createInvoice = async (req, res) => {
   try {
@@ -16,4 +16,25 @@ exports.createInvoice = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+exports.getAllInvoices = async (req, res) => {
+  try {
+    const invoices = await Invoice.find().sort({ createdAt: -1 }); // latest first
+    res.status(200).json({
+      success: true,
+      count: invoices.length,
+      data: invoices,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+module.exports = {
+  createInvoice,
+  getAllInvoices,
 };
