@@ -58,8 +58,37 @@ exports.getSingleInvoice = async (req, res) => {
     });
   }
 };
+
+exports.updateInvoice = async (req, res) => {
+  try {
+    const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: "Invoice not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Invoice updated successfully",
+      data: invoice,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createInvoice,
   getAllInvoices,
   getSingleInvoice,
+  updateInvoice,
 };
