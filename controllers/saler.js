@@ -124,10 +124,37 @@ const updateSaler = async (req, res) => {
     });
   }
 };
+const deleteSaler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedSaler = await salerModel.findByIdAndDelete(id);
+
+    if (!deletedSaler) {
+      return res.status(404).json({
+        success: false,
+        message: "Saler not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Saler deleted successfully",
+      data: deletedSaler,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to delete saler",
+      data: error.message,
+    });
+  }
+};
 
 module.exports = {
   createsaler,
   getSaler,
   getSingleSaler,
   updateSaler,
+  deleteSaler,
 };
