@@ -12,6 +12,8 @@ const supplierRouter = require("./routes/supplier");
 const inventoryRoutes = require("./routes/inventory");
 const customerRoutes = require("./routes/customer");
 const authRouter = require("./routes/auth");
+const salerRoutes = require("./routes/salerRoutes");
+const invoiceRoutes = require("./routes/invoiceRoutes");
 
 app.use(cors());
 app.use(express.json());

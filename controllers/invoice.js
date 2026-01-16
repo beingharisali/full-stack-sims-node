@@ -1,6 +1,6 @@
-const Invoice = require("../model/invoice");
+const Invoice = require("../models/invoice");
 
-exports.createInvoice = async (req, res) => {
+const createInvoice = async (req, res) => {
   try {
     const invoice = new Invoice(req.body);
     await invoice.save();
@@ -18,7 +18,7 @@ exports.createInvoice = async (req, res) => {
   }
 };
 
-exports.getAllInvoices = async (req, res) => {
+const getAllInvoices = async (req, res) => {
   try {
     const invoices = await Invoice.find().sort({ createdAt: -1 }); // latest first
     res.status(200).json({
@@ -35,7 +35,7 @@ exports.getAllInvoices = async (req, res) => {
   }
 };
 
-exports.getSingleInvoice = async (req, res) => {
+const getSingleInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
 
@@ -59,7 +59,7 @@ exports.getSingleInvoice = async (req, res) => {
   }
 };
 
-exports.updateInvoice = async (req, res) => {
+const updateInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -86,7 +86,7 @@ exports.updateInvoice = async (req, res) => {
   }
 };
 
-exports.deleteInvoice = async (req, res) => {
+const deleteInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findByIdAndDelete(req.params.id);
 
