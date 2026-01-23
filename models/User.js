@@ -32,13 +32,13 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "manager", "sales"], //user model names changed
-      default: "sales",
+      enum: ["admin", "manager", "saler"],
+      default: "saler",
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 UserSchema.pre("save", async function () {
@@ -57,7 +57,7 @@ UserSchema.methods.createJWT = function () {
       role: this.role,
     },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_LIFETIME }
+    { expiresIn: process.env.JWT_LIFETIME },
   );
 };
 
