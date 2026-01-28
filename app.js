@@ -14,6 +14,7 @@ const customerRoutes = require("./routes/customer");
 const authRouter = require("./routes/auth");
 const salerRoutes = require("./routes/salerRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
+const dashboardRoutes = require("./routes/dashboard");
 const stockRoutes = require("./routes/stockRoutes");
 
 app.use(cors());
@@ -32,6 +33,7 @@ app.use(helmet());
 
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/customer", customerRoutes);
