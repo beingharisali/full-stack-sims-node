@@ -36,8 +36,8 @@ app.use("/api/v1/supplier", supplierRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
-app.use("api/v1/saler", salerRoutes);
-app.use("api/v1/invoice", invoiceRoutes);
+app.use("/api/v1/saler", salerRoutes);
+app.use("/api/v1/invoice", invoiceRoutes);
 app.use("/api/v1/stock", stockRoutes);
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");

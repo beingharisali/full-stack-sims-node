@@ -1,118 +1,71 @@
 const mongoose = require("mongoose");
 
-const InvoiceSchema = new mongoose.Schema(
+const invoiceSchema = new mongoose.Schema(
   {
-    invoiceNumber: {
+    invoice_number: {
       type: String,
-      required: [true, "Invoice number is required"],
-      unique: true,
+      required: [true, "Please provide invoice number"],
+      maxlength: 50,
       trim: true,
-      minlength: [3, "Invoice number must be at least 3 characters"],
+      index: true,
     },
-
-    client: {
-      name: {
-        type: String,
-        required: [true, "Client name is required"],
-        trim: true,
-        minlength: [2, "Client name must be at least 2 characters"],
-      },
-      email: {
-        type: String,
-        trim: true,
-        lowercase: true,
-      },
-      phone: {
-        type: String,
-        trim: true,
-        minlength: [7, "Phone number is too short"],
-      },
-      address: {
-        type: String,
-        trim: true,
-      },
+    customer_name: {
+      type: String,
+      required: [true, "Please provide customer name"],
+      maxlength: 100,
+      minlength: 2,
+      trim: true,
     },
-
-    items: {
-      type: [
-        {
-          description: {
-            type: String,
-            required: [true, "Item description is required"],
-            trim: true,
-          },
-          quantity: {
-            type: Number,
-            required: true,
-            min: [1, "Quantity must be at least 1"],
-          },
-          price: {
-            type: Number,
-            required: true,
-            min: [0, "Price cannot be negative"],
-          },
-          total: {
-            type: Number,
-            required: true,
-            min: [0, "Total cannot be negative"],
-          },
-        },
-      ],
-      validate: [
-        (val) => val.length > 0,
-        "Invoice must have at least one item",
-      ],
+    customer_email: {
+      type: String,
+      required: [true, "Please provide customer email"],
+      trim: true,
     },
-
-    subTotal: {
+    items: [
+      {
+        description: { type: String, required: true, trim: true },
+        quantity: { type: Number, required: true, min: 1 },
+        unit_price: { type: Number, required: true, min: 0 },
+        total_price: { type: Number, required: true, min: 0 },
+      },
+    ],
+    subtotal: {
       type: Number,
       required: true,
-      min: [0, "Sub total cannot be negative"],
+      min: 0,
     },
-
-    tax: {
+    tax_amount: {
       type: Number,
       default: 0,
-      min: [0, "Tax cannot be negative"],
+      min: 0,
     },
-
-    grandTotal: {
+    discount_amount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    total_amount: {
       type: Number,
       required: true,
-      min: [0, "Grand total cannot be negative"],
-      validate: {
-        validator: function (value) {
-          return value >= this.subTotal + this.tax;
-        },
-        message: "Grand total must be equal to or greater than subTotal + tax",
-      },
+      min: 0,
     },
-
     status: {
       type: String,
-      enum: {
-        values: ["pending", "paid", "cancelled"],
-        message: "Status must be pending, paid, or cancelled",
-      },
-      default: "pending",
+      enum: ["draft", "sent", "paid", "overdue"],
+      default: "draft",
     },
-
-    invoiceDate: {
+    due_date: {
       type: Date,
-      default: Date.now,
     },
-
-    dueDate: {
-      type: Date,
-      validate: {
-        validator: function (value) {
-          return !value || value > this.invoiceDate;
-        },
-        message: "Due date must be after invoice date",
-      },
+    notes: {
+      type: String,
+      trim: true,
+      maxlength: 200,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  },
 );
 
-module.exports = mongoose.model("Invoice", InvoiceSchema);
+module.exports = mongoose.model("Invoice", invoiceSchema);
