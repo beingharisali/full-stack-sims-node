@@ -15,8 +15,12 @@ const authRouter = require("./routes/auth");
 const salerRoutes = require("./routes/salerRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const dashboardRoutes = require("./routes/dashboard");
+const stockRoutes = require("./routes/stockRoutes");
+
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/v1/stock", stockRoutes);
 
 app.use(
   rateLimiter({
@@ -36,6 +40,7 @@ app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/saler", salerRoutes);
 app.use("/api/v1/invoice", invoiceRoutes);
+app.use("/api/v1/stock", stockRoutes);
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
