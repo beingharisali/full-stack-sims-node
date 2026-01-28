@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+
     description: {
       type: String,
       required: [true, "Please provide description"],
@@ -17,9 +18,9 @@ const productSchema = new mongoose.Schema(
       minlength: 3,
       trim: true,
     },
+
     category: {
       type: String,
-      trim: true,
       enum: [
         "mobile",
         "laptop",
@@ -27,7 +28,6 @@ const productSchema = new mongoose.Schema(
         "tablet",
         "televison",
         "camera",
-        "headphones",
         "smartwatch",
         "accessories",
         "home-appliances",
@@ -35,11 +35,13 @@ const productSchema = new mongoose.Schema(
       required: [true, "Please provide a category"],
       trim: true,
     },
+
     price: {
       type: Number,
       required: [true, "Product price is required"],
       min: [0, "Price cannot be negative"],
     },
+
     supplier: {
       type: String,
       required: [true, "Please provide supplier name"],
@@ -47,14 +49,32 @@ const productSchema = new mongoose.Schema(
       minlength: 3,
       trim: true,
     },
+
     stock: {
       type: Number,
       default: 0,
       min: [0, "Stock quantity cannot be negative"],
     },
+
+    isInStock: {
+      type: Boolean,
+      default: true,
+    },
+
+    lowStockThreshold: {
+      type: Number,
+      default: 5,
+      min: [0, "Low stock threshold cannot be negative"],
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
+
+productSchema.pre("save", function (next) {
+  this.isInStock = this.stock > 0;
+  next();
+});
+
 module.exports = mongoose.model("Product", productSchema);
