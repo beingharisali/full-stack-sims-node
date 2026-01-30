@@ -1,5 +1,6 @@
 const productModel = require("../models/Product");
-const createProduct = async (req, res) => {
+const createProduct = async (req, res, next) => {
+  // <-- add next
   try {
     const setProduct = new productModel({
       name: req.body.name,
@@ -17,11 +18,7 @@ const createProduct = async (req, res) => {
       data: setProduct,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Unable to create product",
-      data: error.message,
-    });
+    next(error); // <-- pass the error to middleware
   }
 };
 

@@ -72,9 +72,8 @@ const productSchema = new mongoose.Schema(
   },
 );
 
-productSchema.pre("save", function (next) {
+productSchema.pre("save", function () {
   this.isInStock = this.stock > 0;
-  next();
 });
 
 module.exports = mongoose.model("Product", productSchema);

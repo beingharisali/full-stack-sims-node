@@ -1,27 +1,39 @@
 const { StatusCodes } = require("http-status-codes");
+
 const errorHandlerMiddleware = (err, req, res, next) => {
-  let customerError = {
+  const customError = {
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || "Something went wrong, try again later",
   };
 
+  // Mongoose validation error
   if (err.name === "ValidationError") {
-    customerError.msg = Object.values(err.errors)
+    customError.msg = Object.values(err.errors)
       .map((item) => item.message)
-      .join(",");
-    customerError.statusCode = 400;
+      .join(", ");
+    customError.statusCode = StatusCodes.BAD_REQUEST;
   }
+
+  // Mongoose duplicate key error
   if (err.code && err.code === 11000) {
-    customerError.msg = `Duplicate value entered for ${Object.keys(
-      err.keyValue
+    customError.msg = `Duplicate value entered for ${Object.keys(
+      err.keyValue,
     )} field, please choose another value`;
-    customerError.statusCode = 400;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
   }
+
+  // Mongoose CastError (invalid ObjectId)
   if (err.name === "CastError") {
-    customerError.msg = `No item found with id : ${err.value}`;
-    customerError.statusCode = 404;
+    customError.msg = `No item found with id: ${err.value}`;
+    customError.statusCode = StatusCodes.NOT_FOUND;
   }
-  return res.status(customerError.statusCode).json({ msg: customerError.msg });
+
+  // Send JSON response
+  res.status(customError.statusCode).json({
+    success: false,
+    message: customError.msg,
+    data: err.stack,
+  });
 };
 
 module.exports = errorHandlerMiddleware;
