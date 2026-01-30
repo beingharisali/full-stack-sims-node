@@ -5,7 +5,17 @@ const deductStockController = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
 
+    if (quantity <= 0) {
+      return res.status(400).json({
+        error: "Quantity must be greater than zero",
+      });
+    }
+
     const product = await deductStock(productId, quantity);
+
+    if (product.stock < 0) {
+      throw new Error("Insufficient stock");
+    }
 
     res.status(200).json({
       message: "Stock deducted successfully",
@@ -37,7 +47,12 @@ const createSaleController = async (req, res) => {
         throw new Error("Invalid sale item data");
       }
 
-      await deductStock(productId, quantity);
+      const product = await deductStock(productId, quantity);
+
+      if (product.stock < 0) {
+        throw new Error(`Insufficient stock for product ${productId}`);
+      }
+
       totalAmount += quantity * price;
     }
 
