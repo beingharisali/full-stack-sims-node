@@ -7,17 +7,25 @@ const deductStock = async (productId, quantity) => {
   }
 
   const updatedProduct = await Product.findOneAndUpdate(
-    { _id: productId, stock: { $gte: quantity } },
-    { $inc: { stock: -quantity } },
-    { new: true },
+    {
+      _id: productId,
+      stock: { $gte: quantity },
+    },
+    {
+      $inc: { stock: -quantity },
+    },
+    {
+      new: true,
+    },
   );
 
   if (!updatedProduct) {
-    throw new Error("Product not found or insufficient stock");
+    throw new Error("Insufficient stock or product not found");
   }
 
   return updatedProduct;
 };
+
 const createSale = async (items) => {
   if (!items || items.length === 0) {
     throw new Error("Sale items are required");
@@ -33,6 +41,7 @@ const createSale = async (items) => {
     }
 
     await deductStock(productId, quantity);
+
     totalAmount += quantity * price;
   }
 
