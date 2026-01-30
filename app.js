@@ -17,7 +17,12 @@ const invoiceRoutes = require("./routes/invoiceRoutes");
 const dashboardRoutes = require("./routes/dashboard");
 const stockRoutes = require("./routes/stockRoutes");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 app.use("/api/v1/stock", stockRoutes);

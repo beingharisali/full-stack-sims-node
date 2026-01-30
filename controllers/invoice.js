@@ -20,7 +20,7 @@ const createInvoice = async (req, res) => {
 
 const getAllInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find().sort({ createdAt: -1 }); // latest first
+    const invoices = await Invoice.find().sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       count: invoices.length,
