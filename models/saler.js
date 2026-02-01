@@ -25,7 +25,6 @@ const salerSchema = new mongoose.Schema({
       "tablet",
       "televison",
       "camera",
-      "headphones",
       "smartwatch",
       "accessories",
       "home-appliances",
@@ -40,8 +39,9 @@ const salerSchema = new mongoose.Schema({
   },
   orderitems: {
     type: Number,
-    required: [true, "Please provide description"],
-    trim: true,
+    required: [true, "Please provide order items count"],
+    min: 0,
   },
 });
+
 module.exports = mongoose.model("Saler", salerSchema);
