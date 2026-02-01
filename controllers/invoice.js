@@ -110,6 +110,57 @@ const deleteInvoice = async (req, res) => {
     });
   }
 };
+const getMonthlySalesSummary = async (req, res) => {
+  try {
+    const result = await Invoice.aggregate([
+      // 1️⃣ Only paid invoices
+      { $match: { status: "paid" } },
+      // 2️⃣ Group by year + month
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          totalSales: { $sum: "$total_amount" },
+        },
+      },
+      // 3️⃣ Sort by year & month
+      { $sort: { "_id.year": 1, "_id.month": 1 } },
+      // 4️⃣ Format the output
+      {
+        $project: {
+          _id: 0,
+          month: {
+            $concat: [
+              { $toString: "$_id.year" },
+              "-",
+              {
+                $cond: [
+                  { $lt: ["$_id.month", 10] },
+                  { $concat: ["0", { $toString: "$_id.month" }] },
+                  { $toString: "$_id.month" },
+                ],
+              },
+            ],
+          },
+          totalSales: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to calculate monthly sales summary",
+      error: error.message,
+    });
+  }
+};
 
 const getTotalSales = async (req, res) => {
   try {
@@ -147,4 +198,5 @@ module.exports = {
   updateInvoice,
   deleteInvoice,
   getTotalSales,
+  getMonthlySalesSummary,
 };
