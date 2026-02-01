@@ -119,17 +119,12 @@ const getSingleProduct = async (req, res) => {
 
 const getStockAnalytics = async (req, res) => {
   try {
-    // Total products
     const totalProducts = await Product.countDocuments();
-
-    // Total stock
     const totalStockAgg = await Product.aggregate([
       { $group: { _id: null, totalStock: { $sum: "$stock" } } },
     ]);
     const totalStock =
       totalStockAgg.length > 0 ? totalStockAgg[0].totalStock : 0;
-
-    // Low stock products (threshold 10)
     const lowStockProducts = await Product.find({ stock: { $lt: 10 } })
       .select("name stock")
       .sort({ stock: 1 });
