@@ -1,136 +1,135 @@
 const inventoryModel = require("../models/inventory");
 
 const getInventory = async (req, res) => {
-    try {
-        const inventory = await inventoryModel.find({});
-        res.status(200).json({
-            success: true,
-            message: "Inventory fetched successfully",
-            data: inventory,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Unable to fetch inventory",
-            error: error.message,
-        });
-    }
+  try {
+    const inventory = await inventoryModel.find({});
+    res.status(200).json({
+      success: true,
+      message: "Inventory fetched successfully",
+      data: inventory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch inventory",
+      error: error.message,
+    });
+  }
 };
 
 const createInventory = async (req, res) => {
-    try {
-        const setInventory = new inventoryModel({
-            productName: req.body.productName,
-            description: req.body.description,
-            category: req.body.category,
-            price: req.body.price,
-            supplier: req.body.supplier,
-            quantity: req.body.quantity || 0,
-        });
+  try {
+    const setInventory = new inventoryModel({
+      productName: req.body.productName,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      supplier: req.body.supplier,
+      quantity: req.body.quantity || 0,
+    });
 
-        await setInventory.save();
+    await setInventory.save();
 
-        res.status(201).json({
-            success: true,
-            message: "Inventory created successfully",
-            data: setInventory,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Unable to create inventory",
-            error: error.message,
-        });
-    }
+    res.status(201).json({
+      success: true,
+      message: "Inventory created successfully",
+      data: setInventory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to create inventory",
+      error: error.message,
+    });
+  }
 };
 
 const updateInventory = async (req, res) => {
-    try {
-        const { id } = req.params
-        const updatedInventory = await inventoryModel.findByIdAndUpdate(id,
-            req.body,
-            { new: true }
-        );
+  try {
+    const { id } = req.params;
+    const updatedInventory = await inventoryModel.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true },
+    );
 
-        if (!updatedInventory) {
-            return res.status(404).json({
-                success: false,
-                message: "Inventory not found",
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Inventory updated successfully",
-            data: updatedInventory,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Unable to update inventory",
-            error: error.message,
-        });
+    if (!updatedInventory) {
+      return res.status(404).json({
+        success: false,
+        message: "Inventory not found",
+      });
     }
+
+    res.status(200).json({
+      success: true,
+      message: "Inventory updated successfully",
+      data: updatedInventory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to update inventory",
+      error: error.message,
+    });
+  }
 };
 
 const deleteInventory = async (req, res) => {
-    try {
-        const { id } = req.params
-        const deletedInventory = await inventoryModel.findByIdAndDelete(
-            id
-        );
+  try {
+    const { id } = req.params;
+    const deletedInventory = await inventoryModel.findByIdAndDelete(id);
 
-        if (!deletedInventory) {
-            return res.status(404).json({
-                success: false,
-                message: "Inventory not found",
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Inventory deleted successfully",
-            data: deletedInventory,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Unable to delete inventory",
-            error: error.message,
-        });
+    if (!deletedInventory) {
+      return res.status(404).json({
+        success: false,
+        message: "Inventory not found",
+      });
     }
+
+    res.status(200).json({
+      success: true,
+      message: "Inventory deleted successfully",
+      data: deletedInventory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to delete inventory",
+      error: error.message,
+    });
+  }
 };
 
 const getSingleInventory = async (req, res) => {
-    try {
-        const { id } = req.params
-        const inventory = await inventoryModel.findById(id);
+  try {
+    const { id } = req.params;
+    const inventory = await inventoryModel.findById(id);
 
-        if (!inventory) {
-            return res.status(404).json({
-                success: false,
-                message: "Inventory not found",
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Single inventory fetched successfully",
-            data: inventory,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Unable to fetch inventory",
-            error: error.message,
-        });
+    if (!inventory) {
+      return res.status(404).json({
+        success: false,
+        message: "Inventory not found",
+      });
     }
+
+    res.status(200).json({
+      success: true,
+      message: "Single inventory fetched successfully",
+      data: inventory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch inventory",
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {
-    getInventory,
-    createInventory,
-    updateInventory,
-    deleteInventory,
-    getSingleInventory,
+  getInventory,
+  createInventory,
+  updateInventory,
+  deleteInventory,
+  getSingleInventory,
 };
