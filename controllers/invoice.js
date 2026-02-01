@@ -2,7 +2,13 @@ const Invoice = require("../models/invoice");
 
 const createInvoice = async (req, res) => {
   try {
-    const invoice = new Invoice(req.body);
+    const invoiceNumber = `INV-${Date.now()}`;
+
+    const invoice = new Invoice({
+      ...req.body,
+      invoice_number: invoiceNumber,
+    });
+
     await invoice.save();
 
     res.status(201).json({
@@ -11,9 +17,11 @@ const createInvoice = async (req, res) => {
       data: invoice,
     });
   } catch (error) {
+    console.error("Create Invoice Error:", error.message);
+
     res.status(400).json({
       success: false,
-      message: error.message,
+      message: error.message || "Unable to create invoice",
     });
   }
 };
