@@ -1,6 +1,6 @@
 const productModel = require("../models/Product");
+const Product = require("../models/Product");
 const createProduct = async (req, res, next) => {
-  // <-- add next
   try {
     const setProduct = new productModel({
       name: req.body.name,
@@ -18,7 +18,7 @@ const createProduct = async (req, res, next) => {
       data: setProduct,
     });
   } catch (error) {
-    next(error); // <-- pass the error to middleware
+    next(error);
   }
 };
 
@@ -117,10 +117,45 @@ const getSingleProduct = async (req, res) => {
   }
 };
 
+const getStockAnalytics = async (req, res) => {
+  try {
+    // Total products
+    const totalProducts = await Product.countDocuments();
+
+    // Total stock
+    const totalStockAgg = await Product.aggregate([
+      { $group: { _id: null, totalStock: { $sum: "$stock" } } },
+    ]);
+    const totalStock =
+      totalStockAgg.length > 0 ? totalStockAgg[0].totalStock : 0;
+
+    // Low stock products (threshold 10)
+    const lowStockProducts = await Product.find({ stock: { $lt: 10 } })
+      .select("name stock")
+      .sort({ stock: 1 });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalProducts,
+        totalStock,
+        lowStockProducts,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch stock analytics",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   getProduct,
   updateProduct,
   deleteProduct,
   getSingleProduct,
+  getStockAnalytics,
 };
