@@ -111,10 +111,40 @@ const deleteInvoice = async (req, res) => {
   }
 };
 
+const getTotalSales = async (req, res) => {
+  try {
+    const result = await Invoice.aggregate([
+      {
+        $match: { status: "paid" },
+      },
+      {
+        $group: {
+          _id: null,
+          totalSales: { $sum: "$total_amount" },
+        },
+      },
+    ]);
+
+    const totalSales = result.length > 0 ? result[0].totalSales : 0;
+
+    res.status(200).json({
+      success: true,
+      totalSales,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to calculate total sales",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createInvoice,
   getAllInvoices,
   getSingleInvoice,
   updateInvoice,
   deleteInvoice,
+  getTotalSales,
 };
