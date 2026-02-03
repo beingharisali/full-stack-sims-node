@@ -2,12 +2,13 @@ const salerModel = require("../models/saler");
 
 const createSaler = async (req, res) => {
   try {
-    const { supplierGroup, name, contactNumber, category, status } = req.body;
+    const { supplierGroup, name, contactNumber, category, status, orderitems } =
+      req.body;
 
-    if (!name || !contactNumber) {
+    if (!name || !contactNumber || orderitems === undefined) {
       return res.status(400).json({
         success: false,
-        message: "Name and contact number are required",
+        message: "Name, contact number, and orderitems are required",
       });
     }
 
@@ -17,7 +18,10 @@ const createSaler = async (req, res) => {
       contactNumber,
       category,
       status,
+      orderitems, // <-- add this
     });
+
+    console.log("Schema orderitems type:", typeof saler.orderitems); // should print 'number'
 
     await saler.save();
 
@@ -104,7 +108,7 @@ const updateSaler = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     if (!updatedSaler) {
