@@ -16,6 +16,7 @@ const salerRoutes = require("./routes/salerRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const dashboardRoutes = require("./routes/dashboard");
 const stockRoutes = require("./routes/stockRoutes");
+const salesRoutes = require("./routes/sales");
 
 app.use(
   cors({
@@ -45,6 +46,7 @@ app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/saler", salerRoutes);
 app.use("/api/v1/invoice", invoiceRoutes);
+app.use("/api/v1/sales", salesRoutes);
 app.use("/api/v1/stock", stockRoutes);
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");
