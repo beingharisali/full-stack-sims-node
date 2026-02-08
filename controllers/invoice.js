@@ -1,16 +1,9 @@
-const Invoice = require("../models/invoice");
+const invoiceService = require("../services/invoiceService");
 
 const createInvoice = async (req, res) => {
   try {
-    const invoiceNumber = `INV-${Date.now()}`;
-
-    const invoice = new Invoice({
-      ...req.body,
-      invoice_number: invoiceNumber,
-    });
-
-    await invoice.save();
-
+    const createdBy = req.body.createdBy || (req.user && req.user.userId) || null;
+    const invoice = await invoiceService.createInvoice(req.body, null, createdBy);
     res.status(201).json({
       success: true,
       message: "Invoice created successfully",
@@ -18,7 +11,6 @@ const createInvoice = async (req, res) => {
     });
   } catch (error) {
     console.error("Create Invoice Error:", error.message);
-
     res.status(400).json({
       success: false,
       message: error.message || "Unable to create invoice",
@@ -28,7 +20,7 @@ const createInvoice = async (req, res) => {
 
 const getAllInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find().sort({ createdAt: -1 });
+    const invoices = await invoiceService.getAll();
     res.status(200).json({
       success: true,
       count: invoices.length,
@@ -45,20 +37,15 @@ const getAllInvoices = async (req, res) => {
 
 const getSingleInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.findById(req.params.id);
-
-    if (!invoice) {
-      return res.status(404).json({
-        success: false,
-        message: "Invoice not found",
-      });
-    }
-
+    const invoice = await invoiceService.getById(req.params.id);
     res.status(200).json({
       success: true,
       data: invoice,
     });
   } catch (error) {
+    if (error.message === "Invoice not found") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -69,24 +56,16 @@ const getSingleInvoice = async (req, res) => {
 
 const updateInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!invoice) {
-      return res.status(404).json({
-        success: false,
-        message: "Invoice not found",
-      });
-    }
-
+    const invoice = await invoiceService.updateById(req.params.id, req.body);
     res.status(200).json({
       success: true,
       message: "Invoice updated successfully",
       data: invoice,
     });
   } catch (error) {
+    if (error.message === "Invoice not found") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
     res.status(400).json({
       success: false,
       message: error.message,
@@ -96,21 +75,16 @@ const updateInvoice = async (req, res) => {
 
 const deleteInvoice = async (req, res) => {
   try {
-    const invoice = await Invoice.findByIdAndDelete(req.params.id);
-
-    if (!invoice) {
-      return res.status(404).json({
-        success: false,
-        message: "Invoice not found",
-      });
-    }
-
+    const invoice = await invoiceService.deleteById(req.params.id);
     res.status(200).json({
       success: true,
       message: "Invoice deleted successfully",
       data: invoice,
     });
   } catch (error) {
+    if (error.message === "Invoice not found") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -118,12 +92,12 @@ const deleteInvoice = async (req, res) => {
     });
   }
 };
+
 const getMonthlySalesSummary = async (req, res) => {
   try {
+    const Invoice = require("../models/invoice");
     const result = await Invoice.aggregate([
-      // 1️⃣ Only paid invoices
       { $match: { status: "paid" } },
-      // 2️⃣ Group by year + month
       {
         $group: {
           _id: {
@@ -133,9 +107,7 @@ const getMonthlySalesSummary = async (req, res) => {
           totalSales: { $sum: "$total_amount" },
         },
       },
-      // 3️⃣ Sort by year & month
       { $sort: { "_id.year": 1, "_id.month": 1 } },
-      // 4️⃣ Format the output
       {
         $project: {
           _id: 0,
@@ -172,10 +144,9 @@ const getMonthlySalesSummary = async (req, res) => {
 
 const getTotalSales = async (req, res) => {
   try {
+    const Invoice = require("../models/invoice");
     const result = await Invoice.aggregate([
-      {
-        $match: { status: "paid" },
-      },
+      { $match: { status: "paid" } },
       {
         $group: {
           _id: null,

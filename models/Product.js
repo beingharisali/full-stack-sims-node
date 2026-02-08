@@ -43,11 +43,9 @@ const productSchema = new mongoose.Schema(
     },
 
     supplier: {
-      type: String,
-      required: [true, "Please provide supplier name"],
-      maxlength: 50,
-      minlength: 3,
-      trim: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Supplier",
+      default: null,
     },
 
     stock: {

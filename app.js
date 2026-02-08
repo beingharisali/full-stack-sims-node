@@ -16,6 +16,7 @@ const salerRoutes = require("./routes/salerRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const dashboardRoutes = require("./routes/dashboard");
 const stockRoutes = require("./routes/stockRoutes");
+const salesRoutes = require("./routes/sales");
 
 app.use(
   cors({
@@ -45,6 +46,7 @@ app.use("/api/v1/customer", customerRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/saler", salerRoutes);
 app.use("/api/v1/invoice", invoiceRoutes);
+app.use("/api/v1/sales", salesRoutes);
 app.use("/api/v1/stock", stockRoutes);
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");
@@ -55,13 +57,25 @@ app.use(errorHandlerMiddleware);
 
 // db
 const connectDB = require("./db/connect");
-const invoice = require("./models/invoice");
+const Invoice = require("./models/invoice");
 
 const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
+
+    // Remove stale unique index on invoiceNumber (schema uses invoice_number)
+    try {
+      await Invoice.collection.dropIndex("invoiceNumber_1");
+      console.log("Dropped stale index invoiceNumber_1");
+    } catch (idxErr) {
+      const code = idxErr.code || idxErr.codeName;
+      if (code !== 27 && code !== "IndexNotFound") {
+        console.log("Drop index note:", idxErr.message);
+      }
+    }
+
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`),
     );

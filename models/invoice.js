@@ -62,6 +62,16 @@ const invoiceSchema = new mongoose.Schema(
       trim: true,
       maxlength: 200,
     },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    createdByName: {
+      type: String,
+      trim: true,
+      default: null,
+    },
   },
   {
     timestamps: true,
