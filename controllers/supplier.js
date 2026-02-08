@@ -43,7 +43,7 @@ const getSingleSupplier = async (req, res) => {
   try {
     const { id } = req.params;
     const supplier = await supplierModel.findById(id);
-    if (!product) {
+    if (!supplier) {
       return res.status(404).json({
         success: false,
         message: "Supplier not found",
