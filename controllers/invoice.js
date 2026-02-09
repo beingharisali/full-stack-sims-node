@@ -2,8 +2,13 @@ const invoiceService = require("../services/invoiceService");
 
 const createInvoice = async (req, res) => {
   try {
-    const createdBy = req.body.createdBy || (req.user && req.user.userId) || null;
-    const invoice = await invoiceService.createInvoice(req.body, null, createdBy);
+    const createdBy =
+      req.body.createdBy || (req.user && req.user.userId) || null;
+    const invoice = await invoiceService.createInvoice(
+      req.body,
+      null,
+      createdBy,
+    );
     res.status(201).json({
       success: true,
       message: "Invoice created successfully",
