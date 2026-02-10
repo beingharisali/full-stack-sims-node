@@ -23,12 +23,14 @@ const invoiceSchema = new mongoose.Schema(
     },
     items: [
       {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Inventory" }, // Inventory reference
         description: { type: String, required: true, trim: true },
         quantity: { type: Number, required: true, min: 1 },
         unit_price: { type: Number, required: true, min: 0 },
         total_price: { type: Number, required: true, min: 0 },
       },
     ],
+
     subtotal: {
       type: Number,
       required: true,

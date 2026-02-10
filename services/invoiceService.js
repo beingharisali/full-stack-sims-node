@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Invoice = require("../models/invoice");
-const Product = require("../models/Product");
+const Inventory = require("../models/inventory");
 const User = require("../models/User");
 const salesService = require("./salesService");
 
@@ -34,19 +34,19 @@ async function createInvoice(data, invoiceNumber = null, createdBy = null) {
 
   const items = data.items || [];
 
-  // 1️⃣ STOCK CHECK (pehle)
+  // 1️⃣ STOCK CHECK
   for (const item of items) {
     if (!mongoose.Types.ObjectId.isValid(item.product)) {
       throw new Error("Invalid product ID sent");
     }
-    const product = await Product.findById(item.product);
+    const product = await Inventory.findById(item.product);
 
     if (!product) {
       throw new Error("Product not found");
     }
 
-    if (product.stock < item.quantity) {
-      throw new Error(`Insufficient stock for product: ${product.name}`);
+    if (product.quantity < item.quantity) {
+      throw new Error(`Insufficient stock for product: ${product.productName}`);
     }
   }
 
@@ -62,8 +62,8 @@ async function createInvoice(data, invoiceNumber = null, createdBy = null) {
 
   // 3️⃣ DEDUCT STOCK
   for (const item of items) {
-    await Product.findByIdAndUpdate(item.product, {
-      $inc: { stock: -item.quantity },
+    await Inventory.findByIdAndUpdate(item.product, {
+      $inc: { quantity: -item.quantity },
     });
   }
 
