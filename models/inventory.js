@@ -36,10 +36,14 @@ const inventorySchema = new mongoose.Schema(
       min: [0, "Quantity cannot be negative"],
       default: 0,
     },
+    location: {
+      type: String,
+      default: "Warehouse",
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Inventory", inventorySchema);
