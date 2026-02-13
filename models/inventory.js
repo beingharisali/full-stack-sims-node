@@ -38,6 +38,7 @@ const inventorySchema = new mongoose.Schema(
     },
     location: {
       type: String,
+      default: "warehouse",
     },
   },
   {

@@ -26,6 +26,7 @@ const createInventory = async (req, res) => {
       price: req.body.price,
       supplier: req.body.supplier,
       quantity: req.body.quantity || 0,
+      location: req.body.location,
     });
     await setInventory.save();
 
