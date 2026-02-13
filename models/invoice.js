@@ -8,9 +8,7 @@ const invoiceSchema = new mongoose.Schema(
       maxlength: 50,
       trim: true,
       index: true,
-      unique: true, // important to prevent duplicates
     },
-
     customer_name: {
       type: String,
       required: [true, "Please provide customer name"],
@@ -18,45 +16,18 @@ const invoiceSchema = new mongoose.Schema(
       minlength: 2,
       trim: true,
     },
-
     customer_email: {
       type: String,
       required: [true, "Please provide customer email"],
       trim: true,
-      lowercase: true,
     },
-
     items: [
       {
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Inventory",
-          required: true,
-        },
-
-        description: {
-          type: String,
-          required: true,
-          trim: true,
-        },
-
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
-
-        unit_price: {
-          type: Number,
-          required: true,
-          min: 0,
-        },
-
-        total_price: {
-          type: Number,
-          required: true,
-          min: 0,
-        },
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Inventory" }, // Inventory reference
+        description: { type: String, required: true, trim: true },
+        quantity: { type: Number, required: true, min: 1 },
+        unit_price: { type: Number, required: true, min: 0 },
+        total_price: { type: Number, required: true, min: 0 },
       },
     ],
 
@@ -65,55 +36,43 @@ const invoiceSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-
     tax_amount: {
       type: Number,
       default: 0,
       min: 0,
     },
-
     discount_amount: {
       type: Number,
       default: 0,
       min: 0,
     },
-
     total_amount: {
       type: Number,
       required: true,
       min: 0,
     },
-
     status: {
       type: String,
-      enum: ["draft", "sent", "paid", "overdue", "cancelled"],
+      enum: ["draft", "sent", "paid", "overdue"],
       default: "draft",
     },
-
-    issue_date: {
-      type: Date,
-      default: Date.now,
-    },
-
     due_date: {
       type: Date,
     },
-
     notes: {
       type: String,
       trim: true,
-      maxlength: 300,
+      maxlength: 200,
     },
-
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      default: null,
     },
-
     createdByName: {
       type: String,
       trim: true,
+      default: null,
     },
   },
   {
