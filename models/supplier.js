@@ -1,50 +1,46 @@
 const mongoose = require("mongoose");
 
-const supplierSchema = new mongoose.Schema({
-  supplierGroup: {
-    type: String,
-    required: [true, "Please provide supplier name"],
-    maxlength: 50,
-    minlength: [2, "Product name must be at least 2 characters"],
-    trim: true,
-    index: true,
+const supplierSchema = new mongoose.Schema(
+  {
+    supplierGroup: {
+      type: String,
+      required: [true, "Please provide supplier group"],
+      maxlength: 50,
+      minlength: 2,
+      trim: true,
+      index: true,
+    },
+
+    name: {
+      type: String,
+      required: [true, "Please provide name"],
+      maxlength: 50,
+      minlength: 3,
+      trim: true,
+    },
+
+    contactNumber: {
+      type: String,
+      required: [true, "Contact number is required"],
+      minlength: 11,
+      maxlength: 15,
+      trim: true,
+    },
+
+    category: {
+      type: String,
+      required: [true, "Please provide a category"],
+      trim: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "inactive", "pending", "suspended", "blacklisted"],
+      default: "active",
+      required: true,
+    },
   },
-  name: {
-    type: String,
-    required: [true, "Please provide name"],
-    maxlength: 50,
-    minlength: 3,
-    trim: true,
-  },
-  contactNumber: {
-    type: String,
-    required: [true, "Contact number is required"],
-    minlength: 11,
-    maxlength: 15,
-  },
-  category: {
-    type: String,
-    trim: true,
-    required: [true, "Please provide a category"],
-    enum: [
-      "mobile",
-      "laptop",
-      "headphones",
-      "tablet",
-      "televison",
-      "camera",
-      "headphones",
-      "smartwatch",
-      "accessories",
-      "home-appliances",
-    ],
-  },
-  status: {
-    type: String,
-    required: [true, "Please provide description"],
-    maxlength: 10,
-    minlength: 3,
-    trim: true,
-  },
-});
+  { timestamps: true },
+);
+
 module.exports = mongoose.model("Supplier", supplierSchema);
